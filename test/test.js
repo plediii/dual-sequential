@@ -12,13 +12,16 @@ describe('dual isolated', function () {
         domain.mount({
             iso: {
                 ':id': isolated('id', {
-                    wonder: function () {
-                        done();
+                    wonder: function (ctxt) {
+                        ctxt.reply('Its a');
                     }
                 })
             }
         });
-        domain.send(['iso', 'small', 'wonder']);
+        domain.get(['iso', 'small', 'wonder']).then(function (ctxt) {
+            assert.equal('Its a', ctxt.body);
+            done();
+        });
     });
 
     it('should allow messages from isolated hosts on the message domain', function (done) {
@@ -57,7 +60,7 @@ describe('dual isolated', function () {
             }
         });
         domain.send(['iso', 'small', 'wonder']);
-        domain.send(['iso', 'small', 'vicki']);
+        domain.send(['iso', 'vicki', 'wonder']);
     });
 
     it('should send messages in sequence to isolated hosts with the same ids', function (done) {
@@ -66,26 +69,23 @@ describe('dual isolated', function () {
         domain.mount({
             iso: {
                 ':id': isolated('id', {
-                    wonder: function (ctxt, next) {
+                    wonder: function (ctxt) {
                         count++;
                         if (ctxt.params.id === 'vicki' && count > 2) {
                             assert.equal(3, count);
                             return done();
                         }
                         if (ctxt.params.id === 'vicki') {
-                            return next();
+                            ctxt.reply('lawson');
                         }
                     }
                 })
             }
-            , lawson: function () {
-                done();
-            }
         });
         domain.send(['iso', 'small', 'wonder']);
-        domain.send(['iso', 'small', 'vicki']);
+        domain.send(['iso', 'vicki', 'wonder']);
         domain.send(['iso', 'small', 'wonder']);
-        domain.send(['iso', 'small', 'vicki']);
+        domain.send(['iso', 'vicki', 'wonder']);
     });
 
     it('should send messages in sequence to different isolated hosts with the same ids', function (done) {
@@ -94,30 +94,26 @@ describe('dual isolated', function () {
         domain.mount({
             iso: {
                 ':id': isolated('id', {
-                    wonder: function (ctxt, next) {
+                    wonder: function (ctxt) {
                         count++;
                         if (ctxt.params.id === 'vicki' && count > 2) {
                             assert.equal(3, count);
                             return done();
                         }
                         if (ctxt.params.id === 'vicki') {
-                            return next();
+                            ctxt.reply('GOTIT');
                         }
                     }
-                    , robot: function (ctxt, next) {
+                    , robot: function (ctxt) {
                         count++;
                     }
                 })
             }
-            , lawson: function () {
-                done();
-            }
         });
         domain.send(['iso', 'small', 'wonder']);
-        domain.send(['iso', 'small', 'vicki']);
+        domain.send(['iso', 'vicki', 'wonder']);
         domain.send(['iso', 'small', 'robot']);
-        domain.send(['iso', 'small', 'vicki']);
+        domain.send(['iso', 'vicki', 'wonder']);
     });
-
 
 });
