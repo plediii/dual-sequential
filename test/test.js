@@ -14,12 +14,13 @@ describe('dual isolated', function () {
                 ':id': isolated('id', {
                     wonder: function (ctxt) {
                         assert.equal('small', ctxt.params.id);
+                        assert.equal(ctxt.body.robot, 'daughter');
                         ctxt.reply('Its a');
                     }
                 })
             }
         });
-        domain.get(['iso', 'small', 'wonder']).then(function (ctxt) {
+        domain.get(['iso', 'small', 'wonder'], { robot: 'daughter' }).then(function (ctxt) {
             assert.equal('Its a', ctxt.body);
             done();
         });

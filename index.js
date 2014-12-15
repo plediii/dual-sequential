@@ -38,7 +38,8 @@ module.exports = function (param, isolated) {
                     throw 'Invalid isolated host: ' + qid + ' ' + JSON.stringify(ctxt.params);
                 }
                 enqueue(qid, function () {
-                    ctxt.domain.get(ctxt.to.slice(0, ctxt.to.length - (isoroute.length)).concat(isoid).concat(isoroute)).then(function (getctxt) {
+                    ctxt.domain.get(ctxt.to.slice(0, ctxt.to.length - (isoroute.length)).concat(isoid).concat(isoroute)
+                                   , ctxt.body).then(function (getctxt) {
                         next(qid);
                         getctxt.forward(ctxt.from);
                     });
