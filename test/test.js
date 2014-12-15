@@ -13,6 +13,7 @@ describe('dual isolated', function () {
             iso: {
                 ':id': isolated('id', {
                     wonder: function (ctxt) {
+                        assert.equal('small', ctxt.params.id);
                         ctxt.reply('Its a');
                     }
                 })
@@ -23,6 +24,27 @@ describe('dual isolated', function () {
             done();
         });
     });
+
+    it('should allow messages to second level isolated hosts', function (done) {
+        var domain = dual();
+        domain.mount({
+            root: {
+                iso: {
+                    ':id': isolated('id', {
+                        wonder: function (ctxt) {
+                            assert.equal('small', ctxt.params.id);
+                            ctxt.reply('Its a');
+                        }
+                    })
+                }
+            }
+        });
+        domain.get(['root', 'iso', 'small', 'wonder']).then(function (ctxt) {
+            assert.equal('Its a', ctxt.body);
+            done();
+        });
+    });
+
 
     it('should allow messages from isolated hosts on the message domain', function (done) {
         var domain = dual();
@@ -47,7 +69,7 @@ describe('dual isolated', function () {
         domain.mount({
             iso: {
                 ':id': isolated('id', {
-                    wonder: function (ctxt, next) {
+                    wonder: function (ctxt) {
                         count++;
                         if (count > 1) {
                             done();
