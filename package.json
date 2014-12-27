@@ -1,6 +1,6 @@
 {
   "name": "dual-sequential",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Sequencer for dual api",
   "main": "index.js",
   "private": false,
