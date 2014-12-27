@@ -39,7 +39,8 @@ module.exports = function (param, isolated) {
                 }
                 enqueue(qid, function () {
                     ctxt.domain.get(ctxt.to.slice(0, ctxt.to.length - (isoroute.length)).concat(isoid).concat(isoroute)
-                                   , ctxt.body).then(function (getctxt) {
+                                   , ctxt.body
+                                   , ctxt.options).then(function (getctxt) {
                         next(qid);
                         getctxt.forward(ctxt.from);
                     });
