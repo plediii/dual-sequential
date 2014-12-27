@@ -16,13 +16,18 @@ describe('dual isolated', function () {
                         assert.equal('small', ctxt.params.id);
                         assert.equal(ctxt.body.robot, 'daughter');
                         assert.equal(ctxt.options.oldest, 'person');
-                        ctxt.reply('Its a');
+                        ctxt.reply('Its a', { tara: 'sorry' });
                     }
                 })
             }
         });
         domain.get(['iso', 'small', 'wonder'], { robot: 'daughter' }, { oldest: 'person' }).then(function (ctxt) {
             assert.equal('Its a', ctxt.body);
+            assert.equal(3, ctxt.from.length);
+            assert.equal('iso', ctxt.from[0]);
+            assert.equal('small', ctxt.from[1]);
+            assert.equal('wonder', ctxt.from[2]);
+            assert.equal('sorry', ctxt.options.tara);
             done();
         });
     });

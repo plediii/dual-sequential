@@ -42,7 +42,7 @@ module.exports = function (param, isolated) {
                                    , ctxt.body
                                    , ctxt.options).then(function (getctxt) {
                         next(qid);
-                        getctxt.forward(ctxt.from);
+                        ctxt.reply(getctxt.body, getctxt.options);
                     });
                 });
             }
